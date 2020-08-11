@@ -1,0 +1,22 @@
+.note-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 10px 20px;
+
+    &__title {
+        width: 100%;
+        margin: 0 0 10px;
+        overflow: hidden;
+        text-overflow: ellipsis; 
+        white-space: nowrap; 
+    }
+
+    &__text {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis; 
+        white-space: nowrap; 
+    }
+}

@@ -1,0 +1,25 @@
+.sorting {
+    display: flex;
+
+    &__label {
+        margin: 0 5px 0 0;
+    }
+
+    &__option-container {
+        position: relative;
+    }
+
+    &__option {
+        background-color: rgba(#000, 0.5);
+    }
+
+    &__popup {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        &.hidden {
+            display: none;
+        }
+    }
+}

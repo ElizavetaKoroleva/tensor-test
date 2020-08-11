@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App';
+import './styles/index.scss';
+import NotesEditor from './components/NotesEditor/NotesEditor';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <NotesEditor />
   </React.StrictMode>,
   document.getElementById('root')
 );

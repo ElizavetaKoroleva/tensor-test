@@ -1,0 +1,29 @@
+.notes-list {
+    height: 100%;
+
+    &__search-form {
+        margin: 0 0 20px;
+    }
+
+    &__sorting {
+        margin: 0 0 20px;
+    }
+
+    &__container {
+        height: calc(100vh - 180px);
+        overflow: auto;
+
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__item {
+        height: 70px;
+        margin: 0 0 20px;
+        border: 1px solid rgba(#000, 0.5);
+    }
+}
