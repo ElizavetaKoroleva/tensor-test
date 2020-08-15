@@ -19,7 +19,9 @@ const NoteItem: React.SFC<INoteItem> = ({id, title, text, date, active, onClick,
           <p className="note-item__text">{text}</p>
         </div>
         {onDelete &&
-        <Button label="У" onClick={() => onDelete(id)} icon="" type="button" />
+        <div className="note-item__button">
+          <Button label="У" onClick={() => onDelete(id)} icon="" type="button" />
+        </div>
         }
     </div>
   );

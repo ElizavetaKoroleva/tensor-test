@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '../Button/Button';
 import NotesList from '../NotesList/NotesList';
 import Note from '../Note/Note';
@@ -6,7 +6,7 @@ import SearchForm from '../SearchForm/SearchForm';
 import Sorting from '../Sorting/Sorting';
 
 const NotesEditor: React.SFC = () => {
-  const initialList = [{
+  let initialList = [{
     id: '',
     title: '',
     text: '',
@@ -15,6 +15,7 @@ const NotesEditor: React.SFC = () => {
   }];
   const [notesList, setNotesList] = React.useState(initialList);
   const [activeNote, setActiveNote] = React.useState("");
+  const [isEditable, setIsEditable] = React.useState(false); 
 
   const [currentNote, setCurrentNote] = React.useState({
     id: '',
@@ -33,7 +34,6 @@ const NotesEditor: React.SFC = () => {
         initialList.push(note)
         }
       }
-      //setNotesList(initialList);
     }
   };
 
@@ -76,21 +76,22 @@ const NotesEditor: React.SFC = () => {
   };
 
   const sortByDate = (method: string) => {
-    if (method === "desc") {
-      const sorted = notesList.sort((a, b) => {
+    if (method === "asc") {
+      initialList = notesList.sort((a, b) => {
         return +new Date(a.date) - +new Date(b.date);
       });
-      setNotesList(sorted);
+      setNotesList(initialList.concat());
     } else {
-      const sorted = notesList.sort((a, b) => {
+      initialList = notesList.sort((a, b) => {
         return +new Date(b.date) - +new Date(a.date);
       })
-      setNotesList(sorted);
+      setNotesList(initialList.concat());
     }
   };
 
-  const handleInput = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleInput = (e: any) => {
+    const list = initialList.filter(item => item.title.includes(e.target.value));
+    setNotesList(list);
   }
 
   setInitialList();
@@ -110,6 +111,22 @@ const NotesEditor: React.SFC = () => {
 
   const changeSortingOption = (value: string) => {
     sortByDate(value);
+  };
+
+  const editNote = (id: string, title: string, text: string) => {
+    if (isEditable) {
+      const newNote = {
+        id,
+        title,
+        text,
+        date: new Date(),
+        active: true,
+      }
+      setIsEditable(false);
+      localStorage.setItem(id, JSON.stringify(newNote));
+    } else {
+      setIsEditable(true);
+    }
   };
 
   return (
@@ -137,8 +154,12 @@ const NotesEditor: React.SFC = () => {
         </div>
         <div className="notes-editor__right">
           {(currentNote.title || currentNote.text) && 
-            <Note title={currentNote.title} text={currentNote.text}
-                  onDelete={() => deleteNote(currentNote.id)} />
+            <Note id={currentNote.id}
+                  title={currentNote.title} 
+                  text={currentNote.text}
+                  onEdit={editNote}
+                  onDelete={() => deleteNote(currentNote.id)} 
+                  isEditable={isEditable} />
           }
         </div>
     </div>
