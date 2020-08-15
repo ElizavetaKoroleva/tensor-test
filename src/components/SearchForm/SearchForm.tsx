@@ -7,7 +7,7 @@ export interface SearchForm {
 
 const SearchForm: React.SFC<SearchForm> = ({handleInput, placeholder}) => {
   return (
-    <form className="search-form" onInput={handleInput}>
+    <form className="search-form" onInput={handleInput} onSubmit={(e) => e.preventDefault()}>
         <label>
             <input className="search-form__input" type="text" placeholder={placeholder} />
         </label>

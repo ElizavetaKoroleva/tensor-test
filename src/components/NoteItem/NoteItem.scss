@@ -5,6 +5,10 @@
     height: 100%;
     padding: 10px 20px;
 
+    &--active {
+        background-color: red;
+    }
+
     &__title {
         width: 100%;
         margin: 0 0 10px;

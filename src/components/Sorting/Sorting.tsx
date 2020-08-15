@@ -10,9 +10,10 @@ export interface Option {
 
 export interface Sorting {
     options: Option[],
+    changeSortingOption: (value: string) => void;
 }
 
-const Sorting: React.SFC<Sorting> = ({options}) => {
+const Sorting: React.SFC<Sorting> = ({options, changeSortingOption}) => {
     const [isHidden, setIsHidden] = React.useState(true);
     
     const showPopup = () => {
@@ -30,7 +31,7 @@ const Sorting: React.SFC<Sorting> = ({options}) => {
                     </span>
                 ))}
                 <div className={`sorting__popup ${isHidden ? 'hidden' : ''}`}>
-                    <PopupList list={options} />
+                    <PopupList list={options} changeSortingOption={changeSortingOption} />
                 </div>
             </div>
         </div>
