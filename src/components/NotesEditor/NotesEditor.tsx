@@ -16,28 +16,23 @@ const NotesEditor: React.SFC = () => {
         text: "возрастанию даты",
     },
   ];
-  const [activeOption, setActiveOption] = React.useState("desc");
-
-  let initialList = [{
+  const emptyNote = {
     id: '',
     title: '',
     text: '',
     active: false,
     date: new Date(),
-  }];
+  };
 
+  let initialList = [emptyNote];
+
+  const [activeOption, setActiveOption] = React.useState("desc");
   const [notesList, setNotesList] = React.useState(initialList);
   const [activeNote, setActiveNote] = React.useState("");
   const [isEditable, setIsEditable] = React.useState(false); 
-  const [currentNote, setCurrentNote] = React.useState({
-    id: '',
-    title: '',
-    text: '',
-    active: true,
-    date: new Date()
-  });
+  const [currentNote, setCurrentNote] = React.useState(emptyNote);
 
-  const setInitialList = () => {
+  const getNotesList = () => {
     initialList.length = 0;
 
     if (localStorage.length) {
@@ -60,7 +55,7 @@ const NotesEditor: React.SFC = () => {
   };
 
   const createNote = () => {
-    const id = `f${(~~(Math.random()*1e8)).toString(16)}`;
+    const id = `note_${(~~(Math.random()*1e8)).toString(16)}`;
     const note = {
       id,
       title: 'Заголовок заметки',
@@ -68,16 +63,26 @@ const NotesEditor: React.SFC = () => {
       date: new Date(),
       active: true
     };
-    initialList.push(note);
-    setNotesList(initialList);
+
     localStorage.setItem(id, JSON.stringify(note));
+
+    if (activeOption === "desc") {
+      initialList.unshift(note);
+    } else {
+      initialList.push(note);
+    }
+
+    setIsEditable(true);
+    setNotesList(initialList);
     setCurrentNote(note);
     setActiveNote(id);
   }
 
   const deleteNote = (id: string, e?: React.MouseEvent) => {
-    e?.preventDefault();
+    e?.stopPropagation();
+
     localStorage.removeItem(id);
+
     if (id === currentNote.id) {
       setCurrentNote({
         id: '',
@@ -87,7 +92,8 @@ const NotesEditor: React.SFC = () => {
         active: false
       });
     }
-    setInitialList();
+    
+    getNotesList();
     setNotesList(initialList);
   };
 
@@ -96,11 +102,13 @@ const NotesEditor: React.SFC = () => {
       initialList = notesList.sort((a, b) => {
         return +new Date(a.date) - +new Date(b.date);
       });
+
       setNotesList(initialList.concat());
     } else {
       initialList = notesList.sort((a, b) => {
         return +new Date(b.date) - +new Date(a.date);
       })
+      
       setNotesList(initialList.concat());
     }
   };
@@ -109,8 +117,6 @@ const NotesEditor: React.SFC = () => {
     const list = initialList.filter(item => item.title.includes(e.target.value));
     setNotesList(list);
   }
-
-  setInitialList();
 
   const changeSortingOption = (value: string) => {
     setActiveOption(value);
@@ -128,12 +134,18 @@ const NotesEditor: React.SFC = () => {
       }
       setIsEditable(false);
       localStorage.setItem(id, JSON.stringify(newNote));
-      setInitialList();
+      getNotesList();
       setNotesList(initialList);
     } else {
       setIsEditable(true);
     }
   };
+
+  getNotesList();
+
+  React.useEffect(() => {
+    sortByDate(activeOption);
+  }, [])
 
   return (
     <div className="notes-editor">
@@ -161,15 +173,13 @@ const NotesEditor: React.SFC = () => {
           </div>
         </div>
         <div className="notes-editor__right">
-          {currentNote.id ? 
+          {currentNote.id &&
             <Note id={currentNote.id}
                   title={currentNote.title} 
                   text={currentNote.text}
                   onEdit={editNote}
                   onDelete={() => deleteNote(currentNote.id)} 
                   isEditable={isEditable} />
-            :
-            <div className="" />
           }
         </div>
     </div>
