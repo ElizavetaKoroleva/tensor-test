@@ -114,7 +114,7 @@ const NotesEditor: React.SFC = () => {
   };
 
   const handleInput = (e: any) => {
-    const list = initialList.filter(item => item.title.includes(e.target.value));
+    const list = initialList.filter(item => item.title.toLowerCase().includes(e.target.value.toLowerCase()));
     setNotesList(list);
   }
 
