@@ -5,9 +5,10 @@ import Sorting from '../Sorting/Sorting';
 
 export interface INotesList {
     list: INoteItem[],
+    onClick: (id: string, title: string, text: string, date: Date) => void;
 }
 
-const NotesList: React.SFC<INotesList> = ({list}) => {
+const NotesList: React.SFC<INotesList> = ({list, onClick}) => {
     const handleInput = (e: React.FormEvent) => {
         e.preventDefault();
     }
@@ -34,10 +35,13 @@ const NotesList: React.SFC<INotesList> = ({list}) => {
                 <Sorting options={options} />
             </div>
             <ul className="notes-list__container">
-                {list.map((item, index) => (
-                    <li className="notes-list__item" key={index}>
-                        <NoteItem title={item.title}
+                {list.map((item) => (
+                    <li className="notes-list__item" key={item.id}>
+                        <NoteItem id={item.id}
+                                title={item.title}
                                 text={item.text}
+                                date={item.date}
+                                onClick={onClick}
                         />
                     </li>
                 ))}

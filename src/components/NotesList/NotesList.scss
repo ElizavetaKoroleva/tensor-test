@@ -10,7 +10,7 @@
     }
 
     &__container {
-        height: calc(100vh - 180px);
+        height: calc(100vh - 165px);
         overflow: auto;
 
         -ms-overflow-style: none;
@@ -22,7 +22,7 @@
     }
 
     &__item {
-        height: 70px;
+        height: 90px;
         margin: 0 0 20px;
         border: 1px solid rgba(#000, 0.5);
     }

@@ -23,8 +23,11 @@ const Sorting: React.SFC<Sorting> = ({options}) => {
         <div className="sorting">
             <span className="sorting__label">Сортировать по</span>
             <div className="sorting__option-container">
-                {options.map((option) => (
-                    option.active && <span className="sorting__option" onClick={showPopup}>{option.text}</span>
+                {options.map((option, index) => (
+                    option.active && 
+                    <span className="sorting__option" onClick={showPopup} key={index}>
+                        {option.text}
+                    </span>
                 ))}
                 <div className={`sorting__popup ${isHidden ? 'hidden' : ''}`}>
                     <PopupList list={options} />
