@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Button from '../Button/Button';
 import NotesList from '../NotesList/NotesList';
 import Note from '../Note/Note';
@@ -6,6 +6,18 @@ import SearchForm from '../SearchForm/SearchForm';
 import Sorting from '../Sorting/Sorting';
 
 const NotesEditor: React.SFC = () => {
+  const options = [
+    {
+      value: "desc",
+      text: "убыванию даты",
+    },
+    {
+        value: "asc",
+        text: "возрастанию даты",
+    },
+  ];
+  const [activeOption, setActiveOption] = React.useState("desc");
+
   let initialList = [{
     id: '',
     title: '',
@@ -13,10 +25,10 @@ const NotesEditor: React.SFC = () => {
     active: false,
     date: new Date(),
   }];
+
   const [notesList, setNotesList] = React.useState(initialList);
   const [activeNote, setActiveNote] = React.useState("");
   const [isEditable, setIsEditable] = React.useState(false); 
-
   const [currentNote, setCurrentNote] = React.useState({
     id: '',
     title: '',
@@ -27,12 +39,11 @@ const NotesEditor: React.SFC = () => {
 
   const setInitialList = () => {
     initialList.length = 0;
+
     if (localStorage.length) {
       for (let i = 0; i < localStorage.length; i++) {
         const note = JSON.parse(localStorage.getItem(localStorage.key(i) || "") || "");
-        { note &&
-        initialList.push(note)
-        }
+        note && initialList.push(note);
       }
     }
   };
@@ -64,15 +75,20 @@ const NotesEditor: React.SFC = () => {
     setActiveNote(id);
   }
 
-  const deleteNote = (id: string) => {
+  const deleteNote = (id: string, e?: React.MouseEvent) => {
+    e?.preventDefault();
     localStorage.removeItem(id);
-    setCurrentNote({
-      id: '',
-      title: '',
-      text: '',
-      date: new Date(),
-      active: false
-    });
+    if (id === currentNote.id) {
+      setCurrentNote({
+        id: '',
+        title: '',
+        text: '',
+        date: new Date(),
+        active: false
+      });
+    }
+    setInitialList();
+    setNotesList(initialList);
   };
 
   const sortByDate = (method: string) => {
@@ -96,20 +112,8 @@ const NotesEditor: React.SFC = () => {
 
   setInitialList();
 
-  const options = [
-    {
-        value: "desc",
-        text: "убыванию даты",
-        active: true
-    },
-    {
-        value: "asc",
-        text: "возрастанию даты",
-        active: false
-    },
-  ]
-
   const changeSortingOption = (value: string) => {
+    setActiveOption(value);
     sortByDate(value);
   };
 
@@ -124,6 +128,8 @@ const NotesEditor: React.SFC = () => {
       }
       setIsEditable(false);
       localStorage.setItem(id, JSON.stringify(newNote));
+      setInitialList();
+      setNotesList(initialList);
     } else {
       setIsEditable(true);
     }
@@ -133,13 +139,15 @@ const NotesEditor: React.SFC = () => {
     <div className="notes-editor">
         <div className="notes-editor__left">
           <div className="notes-editor__button-container">
-            <Button type="button" label="Заметка" icon="" onClick={createNote}/>
+            <Button type="button" label="Заметка" icon="/plus.svg" onClick={createNote}/>
           </div>
           <div className="notes-list__search-form">
             <SearchForm placeholder="Поиск..." handleInput={handleInput}/>
           </div>
           <div className="notes-list__sorting">
-            <Sorting options={options} changeSortingOption={changeSortingOption} />
+            <Sorting options={options} 
+                     changeSortingOption={changeSortingOption} 
+                     activeOption={activeOption} />
           </div>
           <div className="notes-editor__list-container">
             {notesList.length ? 
@@ -153,13 +161,15 @@ const NotesEditor: React.SFC = () => {
           </div>
         </div>
         <div className="notes-editor__right">
-          {(currentNote.title || currentNote.text) && 
+          {currentNote.id ? 
             <Note id={currentNote.id}
                   title={currentNote.title} 
                   text={currentNote.text}
                   onEdit={editNote}
                   onDelete={() => deleteNote(currentNote.id)} 
                   isEditable={isEditable} />
+            :
+            <div className="" />
           }
         </div>
     </div>

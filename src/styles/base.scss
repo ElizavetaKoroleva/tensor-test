@@ -17,7 +17,10 @@ html {
 body {
     position: relative;
     margin: 0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 16px;
     overflow-x: hidden;
+    background-color: rgba(#3da7a5, 0.1);
 }
   
 a {
@@ -36,5 +39,9 @@ ul {
 
 h1, h2, h3, h4, h5, p {
     margin: 0;
+}
+
+button {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
   

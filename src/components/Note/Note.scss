@@ -6,7 +6,11 @@
 
     &__buttons-container {
         display: flex;
-        margin: 0 0 20px;
+        margin: 0 -10px 20px;
+
+        button {
+            margin: 0 10px;
+        }
     }
 
     &__content {
@@ -22,6 +26,7 @@
 
     &__title {
         margin: 0 0 20px;
+        font-size: 30px;
         border: 1px solid transparent;
         border-radius: 2px;
 

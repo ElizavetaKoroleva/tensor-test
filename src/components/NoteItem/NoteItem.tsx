@@ -8,7 +8,7 @@ export interface INoteItem {
     date: Date,
     active: boolean,
     onClick?: (id: string, title: string, text: string, date: Date) => void;
-    onDelete?: (id: string) => void;
+    onDelete?: (id: string, e?: React.MouseEvent) => void;
 }
 
 const NoteItem: React.SFC<INoteItem> = ({id, title, text, date, active, onClick, onDelete}) => {
@@ -20,7 +20,7 @@ const NoteItem: React.SFC<INoteItem> = ({id, title, text, date, active, onClick,
         </div>
         {onDelete &&
         <div className="note-item__button">
-          <Button label="У" onClick={() => onDelete(id)} icon="" type="button" />
+          <Button label="" onClick={() => onDelete(id)} icon="/bin.svg" type="button" />
         </div>
         }
     </div>

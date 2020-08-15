@@ -4,10 +4,17 @@
     justify-content: space-between;
     width: 100%;
     height: 100%;
-    padding: 10px 20px;
+    padding: 10px 10px 10px 20px;
+    border: 1px solid rgba(#000, 0.5);
+    border-radius: 2px;
 
     &--active {
-        background-color: rgba(black, 0.3);
+        border: 1px solid rgba(#3da7a5, 0.1);
+        background-color: rgba(#3da7a5, 0.5);
+    }
+
+    &__content {
+        width: 85%;
     }
 
     &__title {
@@ -30,6 +37,17 @@
 
         .note-item:hover & {
             opacity: 1;
+        }
+
+        button {
+            background-color: transparent;
+        }
+
+        svg {
+            width: 30px;
+            height: 30px;
+            margin: 0;
+            fill: #000;
         }
     }
 }

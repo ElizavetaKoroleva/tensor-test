@@ -3,7 +3,6 @@ import * as React from 'react';
 export interface IItem {
     text: string,
     value: string,
-    active: boolean,
 }
 
 export interface IPopupList {
@@ -12,8 +11,6 @@ export interface IPopupList {
 }
 
 const PopupList: React.SFC<IPopupList> = ({list, changeSortingOption}) => {
-    const [activeOption, setActiveOption] = React.useState(); 
-
     return (
         <div className="popup-list">
             <ul className="popup-list__container">
