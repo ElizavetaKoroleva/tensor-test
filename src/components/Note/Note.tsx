@@ -7,20 +7,28 @@ export interface INote {
     text: string,
     isEditable: boolean,
     onDelete: (e?: React.MouseEvent) => void;
-    onEdit: (id: string, title: string, text: string) => void;
+    onEdit: () => void;
+    onCancel: () => void;
+    onSave: (id: string, title: string, text: string) => void;
 }
 
-const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit}) => {
+const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, onCancel, onSave}) => {
   const [currentTitle, setCurrentTitle] = React.useState(title);
   const [currentText, setCurrentText] = React.useState(text);
 
   return (
     <div className="note">
-        <div className="note__buttons-container">
+        <div className={`note__buttons-container ${isEditable && "hidden"}`}>
             <Button type="button" 
-                    label={isEditable ? "Сохранить" : "Редактировать"} 
-                    icon="" onClick={() => onEdit(id, currentTitle, currentText)} />
-            <Button type="button" label="Удалить" icon="" onClick={onDelete}/>
+                    label="Редактировать" 
+                    onClick={onEdit} />
+            <Button type="button" label="Удалить" onClick={onDelete}/>
+        </div>
+        <div className={`note__buttons-container ${!isEditable && "hidden"}`}>
+            <Button type="button" 
+                    label="Сохранить" 
+                    onClick={() => onSave(id, currentTitle, currentText)} />
+            <Button type="button" label="Отмена" onClick={onCancel}/>
         </div>
         <div className="note__content">
             <h2 contentEditable={isEditable} 

@@ -8,6 +8,10 @@
         display: flex;
         margin: 0 -10px 20px;
 
+        &.hidden {
+            display: none;
+        }
+
         button {
             margin: 0 10px;
         }
