@@ -1,9 +1,9 @@
-## Install
+## Усиановка
 
 ### `npm install`
 
 
-## Run
+## Запуск
 
 ### `npm start`
 
