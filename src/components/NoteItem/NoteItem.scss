@@ -10,12 +10,12 @@
     transition: background-color 250ms ease-in-out;
 
     &:hover {
-        background-color: #f1f1f1;
+        background-color: rgba(#348efb, 0.1);
         cursor: pointer;
     }
 
     &--active {
-        background-color: #f1f1f1;
+        background-color: rgba(#348efb, 0.1);
     }
 
     &__content {

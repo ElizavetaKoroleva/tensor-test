@@ -48,7 +48,7 @@ const NotesEditor: React.FC = () => {
   };
 
   const getNoteInfo = (id: string, title: string, text: string, date: Date) => {
-    if (isEditable) {
+    if (isEditable && id !== currentNote.id) {
       openModal("textModal");
     } else {
       setCurrentNote({

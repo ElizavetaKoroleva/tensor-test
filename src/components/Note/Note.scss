@@ -39,6 +39,7 @@
         font-size: 30px;
         border: 1px solid transparent;
         border-radius: 2px;
+        overflow-wrap: anywhere;
 
         &[contentEditable="true"] {
             border: 1px solid black;
@@ -48,6 +49,7 @@
     &__text {
         border: 1px solid transparent;
         border-radius: 2px;
+        overflow-wrap: anywhere;
 
         &[contentEditable="true"] {
             border: 1px solid black;
