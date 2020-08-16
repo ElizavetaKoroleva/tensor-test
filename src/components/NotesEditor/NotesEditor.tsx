@@ -144,15 +144,15 @@ const NotesEditor: React.SFC = () => {
     });
   };
 
-  const cancelEditing = () => {
-    // setCurrentNote({
-    //   id: currentNote.id,
-    //   title: initialContent.title,
-    //   text: initialContent.text,
-    //   active: currentNote.active,
-    //   date: currentNote.date
-    // });
-    // setIsEditable(false);
+  const cancelEditing = (id: string, title: string, text: string, date: Date) => {
+    setCurrentNote({
+      id,
+      title,
+      text,
+      active: true,
+      date
+    });
+    setIsEditable(false);
   }
 
   const saveNote = async (id: string, title: string, text: string) => {
@@ -171,7 +171,6 @@ const NotesEditor: React.SFC = () => {
       setNotesList([...notesList, newNote]);
     }
     localStorage.setItem("notes", JSON.stringify([...notesList, newNote]));
-    
 
     setIsEditable(false);
   };
@@ -216,7 +215,12 @@ const NotesEditor: React.SFC = () => {
                   text={currentNote.text}
                   onEdit={editNote}
                   onDelete={() => deleteNote(currentNote.id)} 
-                  onCancel={cancelEditing}
+                  onCancel={() => cancelEditing(
+                    currentNote.id,
+                    currentNote.title,
+                    currentNote.text,
+                    currentNote.date
+                  )}
                   onSave={saveNote}
                   isEditable={isEditable} />
           }

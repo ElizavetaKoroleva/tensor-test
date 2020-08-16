@@ -18,10 +18,16 @@
     }
 
     &__content {
+        display: flex;
+        flex-direction: column;
         height: calc(100% - 60px);
         overflow-y: auto;
         -ms-overflow-style: none;
         scrollbar-width: none;
+
+        &.hidden {
+            display: none;
+        }
 
         &::-webkit-scrollbar {
             display: none;
@@ -45,6 +51,21 @@
 
         &[contentEditable="true"] {
             border: 1px solid black;
+        }
+    }
+
+    &__input {
+        resize: none;
+
+        &--title {
+            margin: 0 0 20px;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        &--text {
+            height: 100%;
+            font-size: 16px;
         }
     }
 }

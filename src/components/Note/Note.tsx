@@ -14,7 +14,16 @@ export interface INote {
 
 const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, onCancel, onSave}) => {
   const [currentTitle, setCurrentTitle] = React.useState(title);
+  const [previousTitle, setPreviousTitle] = React.useState(title);
   const [currentText, setCurrentText] = React.useState(text);
+  const [previousText, setPreviousText] = React.useState(text);
+
+  React.useEffect(() => {
+    if (isEditable) {
+      setPreviousTitle(currentTitle);
+      setPreviousText(currentText);
+    }
+  }, [isEditable])
 
   return (
     <div className="note">
@@ -28,21 +37,29 @@ const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, 
             <Button type="button" 
                     label="Сохранить" 
                     onClick={() => onSave(id, currentTitle, currentText)} />
-            <Button type="button" label="Отмена" onClick={onCancel}/>
+            <Button type="button" label="Отмена" onClick={() => {
+              setCurrentTitle(previousTitle);
+              setCurrentText(previousText);
+              onCancel();
+            }}/>
         </div>
-        <div className="note__content">
-            <h2 contentEditable={isEditable} 
-                className="note__title"
-                suppressContentEditableWarning={true}
-                onInput={(e) => setCurrentTitle((e.target as HTMLParagraphElement).innerText)}>
-                  {title}
+        <div className={`note__content ${isEditable && 'hidden'}`}>
+            <h2 className="note__title">
+              {currentTitle}
             </h2>
-            <p contentEditable={isEditable} 
-               className="note__text" 
-               suppressContentEditableWarning={true}
-               onInput={(e) => setCurrentText((e.target as HTMLParagraphElement).innerText)}>
-              {text}
+            <p className="note__text" >
+              {currentText}
             </p>
+        </div>
+        <div className={`note__content ${!isEditable && 'hidden'}`}>
+            <textarea className="note__input note__input--title" 
+                      value={currentTitle}
+                      onChange={(e) => setCurrentTitle(e.target.value)}
+            />
+            <textarea className="note__input note__input--text" 
+                      value={currentText}
+                      onChange={(e) => setCurrentText(e.target.value)}
+            />
         </div>
     </div>
   );
