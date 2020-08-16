@@ -34,13 +34,13 @@ const NotesEditor: React.SFC = () => {
   );
   const [isEditable, setIsEditable] = React.useState(false); 
   const [currentNote, setCurrentNote] = React.useState(emptyNote);
-  const [isModalHidden, setisModalHidden] = React.useState(true);
+  const [isTextModalHidden, setisTextModalHidden] = React.useState(true);
   const [isDeleteModalHidden, setisDeleteModalHidden] = React.useState(true);
-  const [agreement, setAgreement] = React.useState(false);
+  const [noteToDelete, setNoteToDelete] = React.useState('');
 
   const getNoteInfo = (id: string, title: string, text: string, date: Date) => {
     if (isEditable) {
-      //setisModalHidden(false);
+      openModal();
     } else {
       setCurrentNote({
         id: '',
@@ -61,7 +61,7 @@ const NotesEditor: React.SFC = () => {
 
   const createNote = async () => {
     if (isEditable) {
-      //setisModalHidden(false);
+      openModal();
     } else {
       const id = `note_${(~~(Math.random()*1e8)).toString(16)}`;
       const list = JSON.parse(localStorage.getItem("notes") || "[]");
@@ -89,22 +89,34 @@ const NotesEditor: React.SFC = () => {
 
   const deleteNote = (id: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
-
-    const noteIndex = notesList.findIndex((item: INoteItem) => item.id === id);
-    notesList.splice(noteIndex, 1);
-    setNotesList([...notesList]);
-    localStorage.setItem("notes", JSON.stringify(notesList));
-
-    if (id === currentNote.id) {
-      setCurrentNote({
-        id: '',
-        title: '',
-        text: '',
-        date: new Date(),
-        active: false
-      });
+    
+    if (isEditable) {
+      openModal();
+    } else {
+      setNoteToDelete(id);
+      openDeleteModal();
     }
   };
+
+  const confirmDeletion = (agreement: boolean) => {
+    setisDeleteModalHidden(true);
+    if (agreement) {
+      const noteIndex = notesList.findIndex((item: INoteItem) => item.id === noteToDelete);
+      notesList.splice(noteIndex, 1);
+      setNotesList([...notesList]);
+      localStorage.setItem("notes", JSON.stringify(notesList));
+  
+      if (noteToDelete === currentNote.id) {
+        setCurrentNote({
+          id: '',
+          title: '',
+          text: '',
+          date: new Date(),
+          active: false
+        });
+      }
+    }
+  }
 
   const sortByDate = (method: string) => {
     if (method === "asc") {
@@ -166,8 +178,20 @@ const NotesEditor: React.SFC = () => {
     setIsEditable(false);
   };
 
-  const confirmDeletion = (agreement: boolean) => {
-    //setAgreement(agreement);
+  const openModal = () => {
+    setisTextModalHidden(false);
+  };
+
+  const openDeleteModal = () => {
+    setisDeleteModalHidden(false);
+  };
+
+  const closeModal = (hidden: boolean) => {
+    setisTextModalHidden(hidden);
+  };
+
+  const closeDeleteModal = (hidden: boolean) => {
+    setisDeleteModalHidden(hidden);
   };
 
   React.useEffect(() => {
@@ -216,6 +240,14 @@ const NotesEditor: React.SFC = () => {
                   isEditable={isEditable} />
           }
         </div>
+        <TextModal text="Пожалуйста сохраните текущую заметку" 
+                   isHidden={isTextModalHidden}
+                   closeModal={closeModal}
+        />
+        <DeleteModal text="Вы уверены, что хотите удалить заметку?" 
+                     isHidden={isDeleteModalHidden} 
+                     closeModal={closeDeleteModal} 
+                     confirm={confirmDeletion} />
     </div>
   );
 };
