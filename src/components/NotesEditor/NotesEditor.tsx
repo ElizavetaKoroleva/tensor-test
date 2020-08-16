@@ -37,6 +37,7 @@ const NotesEditor: React.SFC = () => {
   const [isTextModalHidden, setisTextModalHidden] = React.useState(true);
   const [isDeleteModalHidden, setisDeleteModalHidden] = React.useState(true);
   const [noteToDelete, setNoteToDelete] = React.useState('');
+  const [isSearched, setIsSearched] = React.useState(false);
 
   const getNoteInfo = (id: string, title: string, text: string, date: Date) => {
     if (isEditable) {
@@ -94,10 +95,13 @@ const NotesEditor: React.SFC = () => {
   const confirmDeletion = (agreement: boolean) => {
     setisDeleteModalHidden(true);
     if (agreement) {
-      const noteIndex = notesList.findIndex((item: INoteItem) => item.id === noteToDelete);
-      notesList.splice(noteIndex, 1);
+      const currentList = JSON.parse(localStorage.getItem("notes") || "[]");
+      const noteIndex = currentList.findIndex((item: INoteItem) => item.id === noteToDelete);
+      currentList.splice(noteIndex, 1);
+      const currentIndex = notesList.findIndex((item: INoteItem) => item.id === noteToDelete);
+      notesList.splice(currentIndex, 1);
       setNotesList([...notesList]);
-      localStorage.setItem("notes", JSON.stringify(notesList));
+      localStorage.setItem("notes", JSON.stringify(currentList));
   
       if (noteToDelete === currentNote.id) {
         setCurrentNote({
