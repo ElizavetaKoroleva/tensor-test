@@ -1,14 +1,8 @@
 import * as React from 'react';
-import NoteItem, { INoteItem } from '../NoteItem/NoteItem';
+import NoteItem from '../NoteItem/NoteItem';
+import { INotesList } from '../../types';
 
-export interface INotesList {
-    list: INoteItem[],
-    activeNote: string,
-    onClick: (id: string, title: string, text: string, date: Date) => void;
-    onDelete: (id: string) => void;
-}
-
-const NotesList: React.SFC<INotesList> = ({list, activeNote, onClick, onDelete}) => {
+const NotesList: React.FC<INotesList> = ({list, activeNote, onClick, onDelete}) => {
     return (
         <div className="notes-list">
             <ul className="notes-list__container">

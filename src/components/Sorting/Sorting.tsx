@@ -1,19 +1,8 @@
 import React, { useEffect } from 'react';
 import PopupList from '../PopupList/PopupList';
+import { ISorting } from '../../types';
 
-export interface Option {
-    value: string,
-    text: string,
-}
-
-
-export interface Sorting {
-    options: Option[],
-    activeOption: string,
-    changeSortingOption: (value: string) => void;
-}
-
-const Sorting: React.SFC<Sorting> = ({options, activeOption, changeSortingOption}) => {
+const Sorting: React.FC<ISorting> = ({options, activeOption, changeSortingOption}) => {
     const [isHidden, setIsHidden] = React.useState(true);
 
     useEffect(() => {

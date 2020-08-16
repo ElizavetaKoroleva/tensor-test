@@ -8,7 +8,7 @@ import Sorting from '../Sorting/Sorting';
 import TextModal from '../TextModal/TextModal';
 import DeleteModal from '../DeleteModal/DeleteModal';
 
-const NotesEditor: React.SFC = () => {
+const NotesEditor: React.FC = () => {
   const options = [
     {
       value: "desc",
@@ -37,7 +37,6 @@ const NotesEditor: React.SFC = () => {
   const [isTextModalHidden, setisTextModalHidden] = React.useState(true);
   const [isDeleteModalHidden, setisDeleteModalHidden] = React.useState(true);
   const [noteToDelete, setNoteToDelete] = React.useState('');
-  const [isSearched, setIsSearched] = React.useState(false);
 
   const getNoteInfo = (id: string, title: string, text: string, date: Date) => {
     if (isEditable) {
@@ -199,7 +198,12 @@ const NotesEditor: React.SFC = () => {
     <div className="notes-editor">
         <div className="notes-editor__left">
           <div className="notes-editor__button-container">
-            <Button type="button" label="Заметка" icon="/plus.svg" onClick={createNote}/>
+            <Button type="button" 
+                    label="Заметка" 
+                    text="Заметка"
+                    icon="/plus.svg" 
+                    onClick={createNote}
+            />
           </div>
           <div className="notes-list__search-form">
             <SearchForm placeholder="Поиск..." handleInput={handleInput}/>

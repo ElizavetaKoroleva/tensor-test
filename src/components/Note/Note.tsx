@@ -1,18 +1,8 @@
 import * as React from 'react';
 import Button from '../Button/Button';
+import { INote } from '../../types'; 
 
-export interface INote {
-    id: string,
-    title: string,
-    text: string,
-    isEditable: boolean,
-    onDelete: (e?: React.MouseEvent) => void;
-    onEdit: () => void;
-    onCancel: () => void;
-    onSave: (id: string, title: string, text: string) => void;
-}
-
-const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, onCancel, onSave}) => {
+const Note: React.FC<INote> = ({id, title, text, isEditable, onDelete, onEdit, onCancel, onSave}) => {
   const [currentTitle, setCurrentTitle] = React.useState(title);
   const [previousTitle, setPreviousTitle] = React.useState(title);
   const [currentText, setCurrentText] = React.useState(text);
@@ -28,11 +18,11 @@ const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, 
 
   React.useEffect(() => {
     setCurrentTitle(title);
-  },[title])
+  }, [title])
 
   React.useEffect(() => {
     setCurrentText(text);
-  },[text])
+  }, [text])
 
   const checkForErrors = (field: string) => {
     if (!field.trim().length) {
@@ -55,22 +45,31 @@ const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, 
         <div className={`note__buttons-container ${isEditable && "hidden"}`}>
             <Button type="button" 
                     label="Редактировать" 
+                    text="Редактировать"
                     onClick={onEdit} />
-            <Button type="button" label="Удалить" onClick={onDelete}/>
+            <Button type="button" 
+                    label="Удалить" 
+                    text="Удалить"
+                    onClick={onDelete}/>
         </div>
         <div className={`note__buttons-container ${!isEditable && "hidden"}`}>
             <Button type="button" 
                     label="Сохранить" 
+                    text="Сохранить"
                     onClick={() => {
                       !isError && onSave(id, currentTitle, currentText);
                     }} />
-            <Button type="button" label="Отмена" onClick={() => {
-              setCurrentTitle(previousTitle);
-              setCurrentText(previousText);
-              onCancel();
-            }}/>
+            <Button type="button" 
+                    label="Отмена" 
+                    text="Отмена"
+                    onClick={() => {
+                      setCurrentTitle(previousTitle);
+                      setCurrentText(previousText);
+                      onCancel();
+                      }}
+            />
         </div>
-        <div className={`note__content ${isEditable && 'hidden'}`}>
+        <div className={`note__content ${isEditable && "hidden"}`}>
             <h2 className="note__title">
               {currentTitle}
             </h2>
@@ -78,8 +77,8 @@ const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, 
               {currentText}
             </p>
         </div>
-        <div className={`note__content ${!isEditable && 'hidden'}`}>
-            <span className={`note__error ${!isError && 'hidden'}`}>
+        <div className={`note__content ${!isEditable && "hidden"}`}>
+            <span className={`note__error ${!isError && "hidden"}`}>
               Заметка должна содержать заголовок и текст.
             </span>
             <textarea className="note__input note__input--title" 

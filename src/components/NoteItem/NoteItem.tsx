@@ -1,17 +1,8 @@
 import * as React from 'react';
 import Button from '../Button/Button';
+import { INoteItem } from '../../types';
 
-export interface INoteItem {
-    id: string,
-    title: string,
-    text: string,
-    date: Date,
-    active: boolean,
-    onClick?: (id: string, title: string, text: string, date: Date) => void;
-    onDelete?: (id: string, e?: React.MouseEvent) => void;
-}
-
-const NoteItem: React.SFC<INoteItem> = ({id, title, text, date, active, onClick, onDelete}) => {
+const NoteItem: React.FC<INoteItem> = ({id, title, text, date, active, onClick, onDelete}) => {
   return (
     <div className={`note-item ${active && 'note-item--active'}`} 
          onClick={() => onClick && onClick(id, title, text, date)}>
@@ -21,7 +12,12 @@ const NoteItem: React.SFC<INoteItem> = ({id, title, text, date, active, onClick,
         </div>
         {onDelete &&
         <div className="note-item__button">
-          <Button label="" onClick={(e) => onDelete(id, e)} icon="/bin.svg" type="button" />
+          <Button 
+              label="Удалить" 
+              onClick={(e) => onDelete(id, e)} 
+              icon="/bin.svg" 
+              type="button" 
+          />
         </div>
         }
     </div>

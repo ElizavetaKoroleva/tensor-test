@@ -1,25 +1,22 @@
 import * as React from 'react';
 import Button from '../Button/Button';
+import { IModal } from '../../types'; 
 
-interface IModal {
-    isHidden: boolean;
-    closeModal: (hidden: boolean) => void;
-}
-
-const Modal: React.SFC<IModal> = (props) => {
-  const [isHidden, setIsHidden] = React.useState(props.isHidden);
+const Modal: React.FC<IModal> = (props) => {
+  const { isHidden, closeModal, children } = props;
+  const [hidden, setHidden] = React.useState(isHidden);
 
   React.useEffect(() => {
-    setIsHidden(props.isHidden);
-  }, [props.isHidden])
+    setHidden(isHidden);
+  }, [isHidden])
 
   return (
-    <div className={`modal ${isHidden && 'hidden'}`}>
+    <div className={`modal ${hidden && 'hidden'}`}>
         <div className="modal__window">
-          <Button label="" type="button" icon="/cross.svg" onClick={() => {
-            props.closeModal(true);
+          <Button label="Закрыть" type="button" icon="/cross.svg" onClick={() => {
+            closeModal(true);
           }} />
-          {props.children}
+          {children}
         </div>
     </div>
   );

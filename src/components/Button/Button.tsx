@@ -1,17 +1,12 @@
 import * as React from 'react';
 import SVG from 'react-inlinesvg';
+import { IButton } from '../../types';
 
-export interface ButtonProps {
-  icon?: string;
-  label: string;
-  type: 'button' | 'submit' | 'reset';
-  onClick?: (e?: React.MouseEvent) => void;
-}
-
-const Button: React.SFC<ButtonProps> = ({
+const Button: React.FC<IButton> = ({
   icon,
   label,
-  type = 'button',
+  text,
+  type,
   onClick,
 }) => {
   const button = (
@@ -22,8 +17,8 @@ const Button: React.SFC<ButtonProps> = ({
       onClick={onClick}
     >
       <span className="button__text">
-          {icon && <SVG className="button__icon" src={icon} width={15} height={15}/>}
-          {label}
+          {icon && <SVG className="button__icon" src={icon} />}
+          {text}
       </span>
     </button>
   );
