@@ -28,19 +28,28 @@ const NotesEditor: React.FC = () => {
   };
 
   const [activeOption, setActiveOption] = React.useState("desc");
-  const [notesList, setNotesList] = React.useState(
-    JSON.parse(localStorage.getItem('notes') 
-    || '[{"id": "", "title": "", "text": "", "date": "2020-08-16T12:10:31.074Z", "active": "false"}]')
-  );
   const [isEditable, setIsEditable] = React.useState(false); 
   const [currentNote, setCurrentNote] = React.useState(emptyNote);
   const [isTextModalHidden, setisTextModalHidden] = React.useState(true);
-  const [isDeleteModalHidden, setisDeleteModalHidden] = React.useState(true);
+  const [isDeleteModalHidden, setIsDeleteModalHidden] = React.useState(true);
   const [noteToDelete, setNoteToDelete] = React.useState('');
+
+  const getNotes = () => {
+    return JSON.parse(localStorage.getItem("notes") || "[]");
+  };
+
+  const [notesList, setNotesList] = React.useState(getNotes());
+
+  const setNotes = (list: INoteItem[], note?: INoteItem) => {
+    note ? 
+    localStorage.setItem("notes", JSON.stringify([...list, note]))
+    :
+    localStorage.setItem("notes", JSON.stringify([...list]));
+  };
 
   const getNoteInfo = (id: string, title: string, text: string, date: Date) => {
     if (isEditable) {
-      openModal();
+      openModal("textModal");
     } else {
       setCurrentNote({
         id,
@@ -52,30 +61,31 @@ const NotesEditor: React.FC = () => {
     }
   };
 
-  const createNote = async () => {
+  const createNote = () => {
     if (isEditable) {
-      openModal();
+      openModal("textModal");
     } else {
       const id = `note_${(~~(Math.random()*1e8)).toString(16)}`;
-      const list = JSON.parse(localStorage.getItem("notes") || "[]");
+      const list = getNotes();
 
-      const note = {
+      const newNote = {
         id,
         title:  `Заголовок заметки ${notesList.length + 1}`,
-        text: `Текст ${notesList.length + 1}`,
+        text: `Текст заметки ${notesList.length + 1}`,
         date: new Date(),
         active: true
       };
 
       (document.getElementById("search-input") as HTMLInputElement).value = "";
-      localStorage.setItem("notes", JSON.stringify([...list, note]));
+      setNotes(list, newNote);
 
-      await setCurrentNote(note);
+      setCurrentNote(newNote);
+
       setIsEditable(true);
       if (activeOption === "desc") {
-        setNotesList([note, ...list]);
+        setNotesList([newNote, ...list]);
       } else {
-        setNotesList([...list, note]);
+        setNotesList([...list, newNote]);
       }
     }
   };
@@ -84,57 +94,54 @@ const NotesEditor: React.FC = () => {
     e?.stopPropagation();
     
     if (isEditable) {
-      openModal();
+      openModal("textModal");
     } else {
       setNoteToDelete(id);
-      openDeleteModal();
+      openModal("deleteModal");
     }
   };
 
   const confirmDeletion = (agreement: boolean) => {
-    setisDeleteModalHidden(true);
+    setIsDeleteModalHidden(true);
+
     if (agreement) {
-      const currentList = JSON.parse(localStorage.getItem("notes") || "[]");
+      const currentList = getNotes();
       const noteIndex = currentList.findIndex((item: INoteItem) => item.id === noteToDelete);
       currentList.splice(noteIndex, 1);
       const currentIndex = notesList.findIndex((item: INoteItem) => item.id === noteToDelete);
       notesList.splice(currentIndex, 1);
       setNotesList([...notesList]);
-      localStorage.setItem("notes", JSON.stringify(currentList));
+      setNotes(currentList);
   
       if (noteToDelete === currentNote.id) {
-        setCurrentNote({
-          id: '',
-          title: '',
-          text: '',
-          date: new Date(),
-          active: false
-        });
+        setCurrentNote(emptyNote);
       }
     }
-  }
+  };
 
   const sortByDate = (method: string) => {
     if (method === "asc") {
       const sortedList = notesList.sort((a: INoteItem, b: INoteItem) => {
-        return +new Date(a.date) - +new Date(b.date);
+        return Number(new Date(a.date)) - Number(new Date(b.date));
       });
+
       setNotesList([...sortedList]);
     } else {
       const sortedList = notesList.sort((a: INoteItem, b: INoteItem) => {
-        return +new Date(b.date) - +new Date(a.date);
+        return Number(new Date(b.date)) - Number(new Date(a.date));
       })
+
       setNotesList([...sortedList]);
     }
   };
 
   const handleInput = (e: any) => {
-    const notesCopy = JSON.parse(localStorage.getItem("notes") || "[]");
-    const list = notesCopy.filter((item: INoteItem) => item.title.toLowerCase().includes(e.target.value.toLowerCase()));
+    let list = getNotes();
+    list = list.filter((item: INoteItem) => item.title.toLowerCase().includes(e.target.value.toLowerCase()));
     setNotesList([...list]);
   };
 
-  const changeSortingOption = (value: string) => {
+  const sortNotes = (value: string) => {
     setActiveOption(value);
     sortByDate(value);
   };
@@ -152,9 +159,9 @@ const NotesEditor: React.FC = () => {
       date
     });
     setIsEditable(false);
-  }
+  };
 
-  const saveNote = async (id: string, title: string, text: string) => {
+  const saveNote = (id: string, title: string, text: string) => {
     const newNote = {
       id,
       title,
@@ -162,24 +169,26 @@ const NotesEditor: React.FC = () => {
       date: new Date(),
       active: true,
     };
+
     const activeIndex = notesList.findIndex((item: INoteItem) => item.id === id);
     notesList.splice(activeIndex, 1);
+
     if (activeOption === "desc") {
       setNotesList([newNote, ...notesList]);
     } else {
       setNotesList([...notesList, newNote]);
     }
-    localStorage.setItem("notes", JSON.stringify([...notesList, newNote]));
 
+    setNotes(notesList, newNote);
     setIsEditable(false);
   };
 
-  const openModal = () => {
-    setisTextModalHidden(false);
-  };
-
-  const openDeleteModal = () => {
-    setisDeleteModalHidden(false);
+  const openModal = (modal: string) => {
+    if (modal === "deleteModal") {
+      setIsDeleteModalHidden(false);
+    } else {
+      setisTextModalHidden(false);
+    }
   };
 
   const closeModal = (hidden: boolean) => {
@@ -187,7 +196,7 @@ const NotesEditor: React.FC = () => {
   };
 
   const closeDeleteModal = (hidden: boolean) => {
-    setisDeleteModalHidden(hidden);
+    setIsDeleteModalHidden(hidden);
   };
 
   React.useEffect(() => {
@@ -210,17 +219,19 @@ const NotesEditor: React.FC = () => {
           </div>
           <div className="notes-list__sorting">
             <Sorting options={options} 
-                     changeSortingOption={changeSortingOption} 
+                     changeSortingOption={sortNotes} 
                      activeOption={activeOption} />
           </div>
           <div className="notes-editor__list-container">
-            {notesList && notesList.length && notesList[0].id ? 
+            {notesList && notesList.length ? 
               <NotesList list={notesList} 
                          onClick={getNoteInfo} 
                          onDelete={deleteNote}
                          activeNote={currentNote.id} />
               :
-              <div className="notes-editor__">Список заметок пуст</div>
+              <div className="notes-editor__">
+                Список заметок пуст
+              </div>
             }
           </div>
         </div>
@@ -241,7 +252,7 @@ const NotesEditor: React.FC = () => {
                   isEditable={isEditable} />
           }
         </div>
-        <TextModal text="Пожалуйста сохраните текущую заметку" 
+        <TextModal text="Пожалуйста, сохраните текущую заметку." 
                    isHidden={isTextModalHidden}
                    closeModal={closeModal}
         />
