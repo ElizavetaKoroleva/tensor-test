@@ -17,6 +17,7 @@ const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, 
   const [previousTitle, setPreviousTitle] = React.useState(title);
   const [currentText, setCurrentText] = React.useState(text);
   const [previousText, setPreviousText] = React.useState(text);
+  const [isError, setIsError] = React.useState(false);
 
   React.useEffect(() => {
     if (isEditable) {
@@ -24,6 +25,22 @@ const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, 
       setPreviousText(currentText);
     }
   }, [isEditable])
+
+  const checkForErrors = (field: string) => {
+    if (!field.trim().length) {
+      showError();
+    } else {
+      hideError();
+    }
+  };
+
+  const showError = () => {
+    setIsError(true);
+  };
+
+  const hideError = () => {
+    setIsError(false);
+  };
 
   return (
     <div className="note">
@@ -36,7 +53,9 @@ const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, 
         <div className={`note__buttons-container ${!isEditable && "hidden"}`}>
             <Button type="button" 
                     label="Сохранить" 
-                    onClick={() => onSave(id, currentTitle, currentText)} />
+                    onClick={() => {
+                      !isError && onSave(id, currentTitle, currentText);
+                    }} />
             <Button type="button" label="Отмена" onClick={() => {
               setCurrentTitle(previousTitle);
               setCurrentText(previousText);
@@ -52,13 +71,22 @@ const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, 
             </p>
         </div>
         <div className={`note__content ${!isEditable && 'hidden'}`}>
+            <span className={`note__error ${!isError && 'hidden'}`}>
+              Заметка должна содержать заголовок и текст.
+            </span>
             <textarea className="note__input note__input--title" 
                       value={currentTitle}
-                      onChange={(e) => setCurrentTitle(e.target.value)}
+                      onChange={(e) => {
+                        setCurrentTitle(e.target.value);
+                        checkForErrors(e.target.value);
+                      }}
             />
             <textarea className="note__input note__input--text" 
                       value={currentText}
-                      onChange={(e) => setCurrentText(e.target.value)}
+                      onChange={(e) => {
+                        setCurrentText(e.target.value);
+                        checkForErrors(e.target.value);
+                      }}
             />
         </div>
     </div>

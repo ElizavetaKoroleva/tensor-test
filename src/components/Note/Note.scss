@@ -68,4 +68,13 @@
             font-size: 16px;
         }
     }
+
+    &__error {
+        color: red;
+        opacity: 1;
+
+        &.hidden {
+           opacity: 0;
+        }
+    }
 }

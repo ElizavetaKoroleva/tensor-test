@@ -70,9 +70,8 @@ const NotesEditor: React.SFC = () => {
 
       (document.getElementById("search-input") as HTMLInputElement).value = "";
 
-      //setCurrentNote(note);
-      
-      //setIsEditable(true);
+      setCurrentNote(note);
+      setIsEditable(true);
       if (activeOption === "desc") {
         setNotesList([note, ...list]);
       } else {
