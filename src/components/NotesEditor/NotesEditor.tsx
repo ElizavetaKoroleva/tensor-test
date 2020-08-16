@@ -43,13 +43,6 @@ const NotesEditor: React.SFC = () => {
       openModal();
     } else {
       setCurrentNote({
-        id: '',
-        title,
-        text,
-        date,
-        active: true
-      });
-      setCurrentNote({
         id,
         title,
         text,
@@ -68,13 +61,14 @@ const NotesEditor: React.SFC = () => {
 
       const note = {
         id,
-        title: 'Заголовок заметки',
-        text: 'Текст',
+        title:  `Заголовок заметки ${notesList.length + 1}`,
+        text: `Текст ${notesList.length + 1}`,
         date: new Date(),
         active: true
       };
 
       (document.getElementById("search-input") as HTMLInputElement).value = "";
+      localStorage.setItem("notes", JSON.stringify([...list, note]));
 
       await setCurrentNote(note);
       setIsEditable(true);
@@ -83,7 +77,6 @@ const NotesEditor: React.SFC = () => {
       } else {
         setNotesList([...list, note]);
       }
-      localStorage.setItem("notes", JSON.stringify([...list, note]));
     }
   };
 
