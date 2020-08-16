@@ -26,6 +26,14 @@ const Note: React.SFC<INote> = ({id, title, text, isEditable, onDelete, onEdit, 
     }
   }, [isEditable])
 
+  React.useEffect(() => {
+    setCurrentTitle(title);
+  },[title])
+
+  React.useEffect(() => {
+    setCurrentText(text);
+  },[text])
+
   const checkForErrors = (field: string) => {
     if (!field.trim().length) {
       showError();

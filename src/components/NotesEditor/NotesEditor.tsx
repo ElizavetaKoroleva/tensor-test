@@ -39,10 +39,16 @@ const NotesEditor: React.SFC = () => {
   const [agreement, setAgreement] = React.useState(false);
 
   const getNoteInfo = (id: string, title: string, text: string, date: Date) => {
-    console.log(title, text)
-    // if (isEditable) {
-    //   setisModalHidden(false);
-    // } else {
+    if (isEditable) {
+      //setisModalHidden(false);
+    } else {
+      setCurrentNote({
+        id: '',
+        title,
+        text,
+        date,
+        active: true
+      });
       setCurrentNote({
         id,
         title,
@@ -50,10 +56,10 @@ const NotesEditor: React.SFC = () => {
         date,
         active: true
       });
-    // }
+    }
   };
 
-  const createNote = () => {
+  const createNote = async () => {
     if (isEditable) {
       //setisModalHidden(false);
     } else {
@@ -70,7 +76,7 @@ const NotesEditor: React.SFC = () => {
 
       (document.getElementById("search-input") as HTMLInputElement).value = "";
 
-      setCurrentNote(note);
+      await setCurrentNote(note);
       setIsEditable(true);
       if (activeOption === "desc") {
         setNotesList([note, ...list]);
