@@ -1,12 +1,12 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../Button/Button';
 import { IModal } from '../../types'; 
 
 const Modal: React.FC<IModal> = (props) => {
   const { isHidden, closeModal, children } = props;
-  const [hidden, setHidden] = React.useState(isHidden);
+  const [hidden, setHidden] = useState(isHidden);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setHidden(isHidden);
   }, [isHidden])
 

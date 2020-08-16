@@ -1,26 +1,26 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../Button/Button';
 import { INote } from '../../types'; 
 
 const Note: React.FC<INote> = ({id, title, text, isEditable, onDelete, onEdit, onCancel, onSave}) => {
-  const [currentTitle, setCurrentTitle] = React.useState(title);
-  const [previousTitle, setPreviousTitle] = React.useState(title);
-  const [currentText, setCurrentText] = React.useState(text);
-  const [previousText, setPreviousText] = React.useState(text);
-  const [isError, setIsError] = React.useState(false);
+  const [currentTitle, setCurrentTitle] = useState(title);
+  const [previousTitle, setPreviousTitle] = useState(title);
+  const [currentText, setCurrentText] = useState(text);
+  const [previousText, setPreviousText] = useState(text);
+  const [isError, setIsError] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isEditable) {
       setPreviousTitle(currentTitle);
       setPreviousText(currentText);
     }
   }, [isEditable])
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrentTitle(title);
   }, [title])
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrentText(text);
   }, [text])
 

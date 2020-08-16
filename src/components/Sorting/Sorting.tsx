@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PopupList from '../PopupList/PopupList';
 import { ISorting } from '../../types';
 
 const Sorting: React.FC<ISorting> = ({options, activeOption, changeSortingOption}) => {
-    const [isHidden, setIsHidden] = React.useState(true);
+    const [isHidden, setIsHidden] = useState(true);
 
     useEffect(() => {
         window.addEventListener("click", (e) => {

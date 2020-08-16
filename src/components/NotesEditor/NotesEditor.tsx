@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { INoteItem } from '../../types';
 import Button from '../Button/Button';
 import NotesList from '../NotesList/NotesList';
@@ -27,18 +27,18 @@ const NotesEditor: React.FC = () => {
     date: new Date(),
   };
 
-  const [activeOption, setActiveOption] = React.useState("desc");
-  const [isEditable, setIsEditable] = React.useState(false); 
-  const [currentNote, setCurrentNote] = React.useState(emptyNote);
-  const [isTextModalHidden, setisTextModalHidden] = React.useState(true);
-  const [isDeleteModalHidden, setIsDeleteModalHidden] = React.useState(true);
-  const [noteToDelete, setNoteToDelete] = React.useState('');
+  const [activeOption, setActiveOption] = useState("desc");
+  const [isEditable, setIsEditable] = useState(false); 
+  const [currentNote, setCurrentNote] = useState(emptyNote);
+  const [isTextModalHidden, setisTextModalHidden] = useState(true);
+  const [isDeleteModalHidden, setIsDeleteModalHidden] = useState(true);
+  const [noteToDelete, setNoteToDelete] = useState('');
 
   const getNotes = () => {
     return JSON.parse(localStorage.getItem("notes") || "[]");
   };
 
-  const [notesList, setNotesList] = React.useState(getNotes());
+  const [notesList, setNotesList] = useState(getNotes());
 
   const setNotes = (list: INoteItem[], note?: INoteItem) => {
     note ? 
@@ -66,8 +66,6 @@ const NotesEditor: React.FC = () => {
       openModal("textModal");
     } else {
       const id = `note_${(~~(Math.random()*1e8)).toString(16)}`;
-      const list = getNotes();
-
       const newNote = {
         id,
         title:  `Заголовок заметки ${notesList.length + 1}`,
@@ -76,12 +74,14 @@ const NotesEditor: React.FC = () => {
         active: true
       };
 
+      const list = getNotes();
+
       (document.getElementById("search-input") as HTMLInputElement).value = "";
+
       setNotes(list, newNote);
-
       setCurrentNote(newNote);
-
       setIsEditable(true);
+
       if (activeOption === "desc") {
         setNotesList([newNote, ...list]);
       } else {
@@ -199,7 +199,7 @@ const NotesEditor: React.FC = () => {
     setIsDeleteModalHidden(hidden);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     sortByDate(activeOption);
   }, [])
 
