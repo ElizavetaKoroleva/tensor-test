@@ -40,7 +40,7 @@ const NotesEditor: React.FC = () => {
 
   const [notesList, setNotesList] = useState(getNotes());
 
-  const setNotes = (list: INoteItem[], note?: INoteItem) => {
+  const saveNotes = (list: INoteItem[], note?: INoteItem) => {
     note ? 
     localStorage.setItem("notes", JSON.stringify([...list, note]))
     :
@@ -78,7 +78,7 @@ const NotesEditor: React.FC = () => {
 
       (document.getElementById("search-input") as HTMLInputElement).value = "";
 
-      setNotes(list, newNote);
+      saveNotes(list, newNote);
       setCurrentNote(newNote);
       setIsEditable(true);
 
@@ -111,7 +111,7 @@ const NotesEditor: React.FC = () => {
       const currentIndex = notesList.findIndex((item: INoteItem) => item.id === noteToDelete);
       notesList.splice(currentIndex, 1);
       setNotesList([...notesList]);
-      setNotes(currentList);
+      saveNotes(currentList);
   
       if (noteToDelete === currentNote.id) {
         setCurrentNote(emptyNote);
@@ -179,7 +179,7 @@ const NotesEditor: React.FC = () => {
       setNotesList([...notesList, newNote]);
     }
 
-    setNotes(notesList, newNote);
+    saveNotes(notesList, newNote);
     setIsEditable(false);
   };
 
