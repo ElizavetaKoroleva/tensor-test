@@ -34,12 +34,12 @@ const NotesEditor: React.SFC = () => {
   );
   const [isEditable, setIsEditable] = React.useState(false); 
   const [currentNote, setCurrentNote] = React.useState(emptyNote);
-  const [initialContent, setInitialContent] = React.useState({title: '', text: ''});
   const [isModalHidden, setisModalHidden] = React.useState(true);
   const [isDeleteModalHidden, setisDeleteModalHidden] = React.useState(true);
   const [agreement, setAgreement] = React.useState(false);
 
   const getNoteInfo = (id: string, title: string, text: string, date: Date) => {
+    console.log(title, text)
     // if (isEditable) {
     //   setisModalHidden(false);
     // } else {
@@ -54,42 +54,32 @@ const NotesEditor: React.SFC = () => {
   };
 
   const createNote = () => {
-    // if (isEditable) {
-    //   setisModalHidden(false);
-    // } else {
-    const id = `note_${(~~(Math.random()*1e8)).toString(16)}`;
+    if (isEditable) {
+      //setisModalHidden(false);
+    } else {
+      const id = `note_${(~~(Math.random()*1e8)).toString(16)}`;
+      const list = JSON.parse(localStorage.getItem("notes") || "[]");
 
-    const note = {
-      id,
-      title: 'Заголовок заметки',
-      text: 'Текст',
-      date: new Date(),
-      active: true
-    };
+      const note = {
+        id,
+        title: 'Заголовок заметки',
+        text: 'Текст',
+        date: new Date(),
+        active: true
+      };
 
-    //   localStorage.setItem(id, JSON.stringify(note));
+      (document.getElementById("search-input") as HTMLInputElement).value = "";
 
-      // if (activeOption === "desc") {
-      //   initialList.unshift(note);
-      // } else {
-      //   initialList.push(note);
-      // }
-
-      //await setCurrentNote(note);
+      //setCurrentNote(note);
       
-      // setInitialContent({
-      //   title: 'Заголовок заметки',
-      //   text: 'Текст'
-      // });
       //setIsEditable(true);
-      //getNotesList();
       if (activeOption === "desc") {
-        setNotesList([note, ...notesList]);
+        setNotesList([note, ...list]);
       } else {
-        setNotesList([...notesList, note]);
+        setNotesList([...list, note]);
       }
-      localStorage.setItem("notes", JSON.stringify([...notesList, note]));
-    //}
+      localStorage.setItem("notes", JSON.stringify([...list, note]));
+    }
   };
 
   const deleteNote = (id: string, e?: React.MouseEvent) => {
@@ -138,10 +128,6 @@ const NotesEditor: React.SFC = () => {
 
   const editNote = () => {
     setIsEditable(true);
-    setInitialContent({
-      title: currentNote.title,
-      text: currentNote.text
-    });
   };
 
   const cancelEditing = (id: string, title: string, text: string, date: Date) => {

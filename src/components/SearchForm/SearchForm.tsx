@@ -9,7 +9,7 @@ const SearchForm: React.SFC<SearchForm> = ({handleInput, placeholder}) => {
   return (
     <div className="search-form">
         <label>
-            <input className="search-form__input" type="text" placeholder={placeholder} 
+            <input id="search-input" className="search-form__input" type="text" placeholder={placeholder} 
                    onInput={handleInput} />
         </label>
     </div>
