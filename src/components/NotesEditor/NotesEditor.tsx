@@ -213,7 +213,7 @@ const NotesEditor: React.SFC = () => {
                      activeOption={activeOption} />
           </div>
           <div className="notes-editor__list-container">
-            {notesList && notesList.length ? 
+            {notesList && notesList.length && notesList[0].id ? 
               <NotesList list={notesList} 
                          onClick={getNoteInfo} 
                          onDelete={deleteNote}
