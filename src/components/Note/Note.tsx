@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '../Button/Button';
 import { INote } from '../../types'; 
 
-const Note: React.FC<INote> = ({id, title, text, isEditable, onDelete, onEdit, onCancel, onSave}) => {
+const Note: React.FC<INote> = ({id, title, text, isEditable, isNew, onDelete, onEdit, onCancel, onSave}) => {
   const [currentTitle, setCurrentTitle] = useState(title);
   const [previousTitle, setPreviousTitle] = useState(title);
   const [currentText, setCurrentText] = useState(text);
@@ -11,8 +11,13 @@ const Note: React.FC<INote> = ({id, title, text, isEditable, onDelete, onEdit, o
 
   useEffect(() => {
     if (isEditable) {
-      setPreviousTitle(currentTitle);
-      setPreviousText(currentText);
+      if (isNew) {
+        setPreviousTitle(title);
+        setPreviousText(text);
+      } else {
+        setPreviousTitle(currentTitle);
+        setPreviousText(currentText);
+      }
     }
   }, [isEditable])
 

@@ -31,10 +31,11 @@ export interface IModal {
 };
 
 export interface INote {
-    id: string,
-    title: string,
-    text: string,
-    isEditable: boolean,
+    id: string;
+    title: string;
+    text: string;
+    isEditable: boolean;
+    isNew: boolean;
     onDelete: (e?: React.MouseEvent) => void;
     onEdit: () => void;
     onCancel: () => void;

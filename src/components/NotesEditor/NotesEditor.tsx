@@ -33,6 +33,7 @@ const NotesEditor: React.FC = () => {
   const [isTextModalHidden, setisTextModalHidden] = useState(true);
   const [isDeleteModalHidden, setIsDeleteModalHidden] = useState(true);
   const [noteToDelete, setNoteToDelete] = useState('');
+  const [isNew, setIsNew] = useState(false);
 
   const getNotes = () => {
     return JSON.parse(localStorage.getItem("notes") || "[]");
@@ -58,6 +59,7 @@ const NotesEditor: React.FC = () => {
         date,
         active: true
       });
+      setIsNew(false);
     }
   };
 
@@ -81,6 +83,7 @@ const NotesEditor: React.FC = () => {
       saveNotes(list, newNote);
       setCurrentNote(newNote);
       setIsEditable(true);
+      setIsNew(true);
 
       if (activeOption === "desc") {
         setNotesList([newNote, ...list]);
@@ -240,6 +243,7 @@ const NotesEditor: React.FC = () => {
             <Note id={currentNote.id}
                   title={currentNote.title} 
                   text={currentNote.text}
+                  isNew={isNew}
                   onEdit={editNote}
                   onDelete={() => deleteNote(currentNote.id)} 
                   onCancel={() => cancelEditing(
